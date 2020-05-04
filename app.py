@@ -1,7 +1,10 @@
 from flask import Flask, url_for, request, jsonify
 from flask import render_template
+from mainController import blueprint
+from VO.first import first
 
 app = Flask(__name__)
+app.register_blueprint(blueprint)
 
 
 @app.route('/')
@@ -18,13 +21,21 @@ def hello(name=None):
 @app.route('/login', methods=['POST', 'GET'])
 def login():
     error = None
+
+    temp = first("yes")
+    #temp.name = "yes"
+    print(temp.name)
+
     if request.method == 'POST':
         print("post")
         #print(request.form['username'])
         print(request.get_data())
     else:
         print(request)
-    return "asd"
+
+    myData ={'name' : 'zz', 'age' : 18}
+    return jsonify(myData)
+
 
 '''
 request body:
