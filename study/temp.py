@@ -4,7 +4,6 @@ import csv
 from study.Employee import Employee
 from study.SoccerPlayer import SoccerPlayer
 
-
 ## Dictionary
 from study.first import first
 
@@ -106,10 +105,10 @@ me.do_work()
 from study import converter as cvt
 from study.converter import convert_c_to_f
 
-#print("Enter celsius value: ")
-#celsius = float(input())
-#fahrenheit = cvt.convert_c_to_f(celsius)
-#print("converted : " + str(fahrenheit))
+# print("Enter celsius value: ")
+# celsius = float(input())
+# fahrenheit = cvt.convert_c_to_f(celsius)
+# print("converted : " + str(fahrenheit))
 
 
 '''
@@ -118,5 +117,146 @@ response = urllib.request.urlopen("http://localhost:5000")
 print(response.read())
 '''
 
+'''
+# exception
+for i in range(10):
+    try:
+        result = 10 / i
+    except Exception:
+        print("divided by zero")
+    # exception 이 일어나지 않으면 -> 정상 실행되면
+    else:
+        print(10 / i)
+'''
+
+'''
+# file
+import os
+
+print(os.getcwd())
+f = open("temp.txt", "a") # w대신 a로 하면 맨 뒤에 추가
+f.write("Life is short?")
+f.close()
 
 
+# directory 확인 후 만들기
+if not os.path.isdir("study"):
+    os.mkdir("study")
+else:
+    print("already exists")
+
+with open("mainController.py", "r") as file:
+    # content = file.readlines()
+    # print(content)
+
+    
+    i = 0
+    while 1:
+        line = file.readline().replace("\n", "")
+        if line.strip() == "":
+            continue
+        if not line:
+            break
+        print(str(i) + " === " + line)
+        i += 1
+    
+
+    content = file.read()
+    word_list = content.split(" ")
+    line_list = content.split("\n")
+
+    print(word_list)
+    print(line_list)
+'''
+
+'''
+# logging
+import logging
+logging.debug("debug")
+logging.info("info")
+logging.warning("warning")
+logging.error("error")
+logging.critical("critical")
+'''
+
+'''
+# csv file
+
+line_counter = 0
+data_header = []
+customer_list = []
+
+with open("study/customers.csv") as customer_data:
+    while 1:
+        data = customer_data.readline()
+        if not data: break
+        if line_counter == 0:  # 첫 줄 = 해더
+            data_header = data.split(",")
+        else:
+            customer_list.append(data.split(","))
+        line_counter += 1
+print("Header:\t ", data_header)
+for data in customer_list:
+    print("Data:\t", data)
+print(len(customer_list))
+
+with open("customer_custom.csv", "w") as customer_custom:
+    customer_custom.write(",".join(data_header).strip('\n')+"\n")
+    for data in customer_list:
+        customer_custom.write(",".join(data).strip('\n')+"\n")
+'''
+
+
+'''
+# 정규식 https://regexr.com
+import re
+import urllib.request
+
+
+message = "AAabcdefg word check"
+# [abc] -> a, b, c 중 하나가 있다.    [a-z] -> a~z까지 중 하나가 있다.
+result = re.findall(r"[a-z]", message)
+resulttemp = re.findall(r"\w", message)
+print(resulttemp)
+print(result)
+
+#url = "http://www.google.com/googlebooks/uspto-patents-grants-text.html"
+#html = urllib.request.urlopen(url)
+#html_contents = str(html.read().decode("utf8"))
+
+#url_list = re.findall(r"(http)(.+)(zip)", html_contents)
+#for url in url_list:
+#    #print(url)
+#    print("".join(url))
+
+url = "http://finance.naver.com/item/main.nhn?code=005930"
+html = urllib.request.urlopen(url)
+html_contents = str(html.read().decode("ms949"))
+
+stock_results = re.findall("(\<dl class=\"blind\"\>)([\s\S]+?)(\<\/dl\>)", html_contents)
+samsung_stock = stock_results[0]
+samsung_index = samsung_stock[1]
+#print(samsung_stock)
+index_list = re.findall("(\<dd\>)([\s\S]+?)(\<\/dd\>)", samsung_index)
+
+for index in index_list:
+    print(index[1])
+'''
+
+
+# JSON
+import json
+
+
+with open("study/json_example.json", "r", encoding="utf8") as f:
+    contents = f.read()
+    json_data = json.loads(contents)
+    print(json_data["employees"])
+    for employee in json_data["employees"]:
+        print(employee)
+
+dict_data = {'Name': 'Zara', 'Age': 7, 'Class': 'First'}
+print(dict_data)
+
+with open("study/data.json", "w") as file:
+    json.dump(dict_data, file)
