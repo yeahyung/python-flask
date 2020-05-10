@@ -1,12 +1,12 @@
 import pyspark
-from pyspark import SparkContext
 from pyspark.sql import SQLContext
 from pyspark.sql.functions import *
 import pandas as pd
 import numpy as np
 
-conf = pyspark.SparkConf().set('spark.driver.host','127.0.0.1')
-sc = pyspark.SparkContext(master='local', appName='myAppName',conf=conf)
+
+conf = pyspark.SparkConf().set('spark.driver.host', '127.0.0.1')
+sc = pyspark.SparkContext(master='local', appName='myAppName', conf=conf)
 
 sqlContext = SQLContext(sc)
 
@@ -32,6 +32,10 @@ df2 = sqlContext.sql("select * from df_tmp")
 df2_pdf = df2.select("sessionid", "ext").filter(" ext == 'PDF' or ext = 'DOC'").dropDuplicates().cache()
 df2_pdf.show()
 
+df2_join = df2_pdf.join(df2_pdf, "sessionid", "left")
+df2_join.show()
+
+
 # sessionid, datetime 선택? aggregation min(datetime) 이 어떤 역할을 하는지는 모르겠음
 df2_min = df2.groupby("sessionid").agg(min("datetime").alias("min_date"))
 df2_min.show()
@@ -39,4 +43,3 @@ df2_min.show()
 # df2_pdf 에 df2_min의 sessionid 왼쪽 에 join
 df2_join = df2_pdf.join(df2_min, "sessionid", "left")
 df2_join.show()
-

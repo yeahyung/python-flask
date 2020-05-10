@@ -1,12 +1,16 @@
+from flask import Blueprint
 import datetime
 from elasticsearch import Elasticsearch
 
 
-def insertData():
-    es = Elasticsearch('[localhost]:9200')
-    # index : product_list, type : _doc
-    index = "product_list"
+elastic = Blueprint('elastic', __name__)
+es = Elasticsearch('[localhost]:9200')
+index = "product_list"
 
+
+# index : product_list, type : _doc
+@elastic.route('/putData')
+def putData():
     doc = {
         "category": "t-shirt",
         "price": 16700,
@@ -14,11 +18,11 @@ def insertData():
     }
     es.index(index="product_list", doc_type="_doc", body=doc)
 
+    return "OK"
 
-def searchAPI():
-    es = Elasticsearch('[localhost]:9200')
 
-    index = "product_list"
+@elastic.route('/searchData')
+def searchData():
     body = {
         "query": {
             "match_all": {}
@@ -30,6 +34,5 @@ def searchAPI():
     for item in res['hits']['hits']:
         print(item['_source'])
 
+    return res
 
-#insertData()
-searchAPI()
