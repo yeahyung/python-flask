@@ -1,0 +1,15 @@
+import smtplib
+from email.mime.text import MIMEText
+
+naver_server = smtplib.SMTP_SSL('smtp.naver.com', 465)
+
+naver_server.login('id', 'password')
+
+msg = MIMEText('alert', _charset='euc-kr')
+msg['Subject'] = "this is title"
+msg['From'] = 'myaddress'
+msg['To'] = 'myaddress2'
+
+naver_server.sendmail('myaddress', ['myaddress'], msg.as_string())
+
+naver_server.quit()
