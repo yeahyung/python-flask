@@ -1,0 +1,42 @@
+# -*- coding: utf-8 -*-
+# centos7, python2.7
+import re
+import requests
+import threading
+import smtplib
+from email.mime.text import MIMEText
+
+end = False
+
+def execute_func(second=1.0):
+        url = "https://www.apple.com/kr/mac/"
+        html = requests.get(url)
+
+        html.raise_for_status()
+
+        content = html.text
+        launch = re.findall("(\<span class=\"violator-secondary\")([\s\S]+?)(\<\/span\>)", content)
+
+        place = launch[0][1].find("출시일은 추후 공개됩니다".decode('utf-8'))
+
+        print(place)
+
+        if(place == -1):
+                end = True
+                naver_server = smtplib.SMTP_SSL('smtp.naver.com', 465)
+
+                naver_server.login('id', 'pw!')
+
+                msg = MIMEText('alert', _charset='euc-kr')
+                msg['Subject'] = "this is title"
+                msg['From'] = 'yaddr@naver.com'
+                msg['To'] = 'yaddr@navercorp.com'
+
+                naver_server.sendmail('yaddr@naver.com', ['yaddr@navercorp.com'], msg.as_string())
+
+                naver_server.quit()
+                print("send email")
+
+        threading.Timer(second, execute_func, [second]).start()
+
+execute_func(100.0)
