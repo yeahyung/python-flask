@@ -14,8 +14,8 @@ from VO.first import first
 
 app = Flask(__name__)
 app.register_blueprint(blueprint)
-app.register_blueprint(spark)
-app.register_blueprint(elastic)
+#app.register_blueprint(spark)
+#app.register_blueprint(elastic)
 
 
 @app.route('/')
